@@ -9,9 +9,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
     destination: uploadDir,
@@ -28,7 +29,7 @@ app.post('/submit', upload.fields([
     { name: 'ssnDocument' }
 ]), (req, res) => {
     const { fullName, dob, homeAddress, phoneNumber, email, ssn } = req.body;
-    
+
     const application = {
         fullName,
         dob,
@@ -44,8 +45,13 @@ app.post('/submit', upload.fields([
 
     let applications = [];
     if (fs.existsSync('data.json')) {
-        applications = JSON.parse(fs.readFileSync('data.json'));
+        try {
+            applications = JSON.parse(fs.readFileSync('data.json'));
+        } catch (err) {
+            applications = [];
+        }
     }
+
     applications.push(application);
     fs.writeFileSync('data.json', JSON.stringify(applications, null, 2));
 
@@ -54,22 +60,37 @@ app.post('/submit', upload.fields([
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
-    const user = users.find(u => u.username === username && u.password === password);
-    
-    if (user) {
-        res.json({ success: true });
-    } else {
-        res.json({ success: false, message: "Invalid login details" });
+
+    if (!fs.existsSync('users.json')) {
+        return res.json({ success: false, message: "No users found." });
+    }
+
+    try {
+        const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: "Invalid login details" });
+        }
+    } catch (err) {
+        res.json({ success: false, message: "Error reading users." });
     }
 });
 
 app.get('/applications', (req, res) => {
     if (fs.existsSync('data.json')) {
-        res.json(JSON.parse(fs.readFileSync('data.json')));
+        try {
+            res.json(JSON.parse(fs.readFileSync('data.json')));
+        } catch (err) {
+            res.json([]);
+        }
     } else {
         res.json([]);
     }
 });
+
+app.use('/uploads', express.static(uploadDir));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
