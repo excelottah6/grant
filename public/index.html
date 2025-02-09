@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Grant Application Form</h1>
+        <form id="application-form">
+            <label>Full Name:</label>
+            <input type="text" id="fullName" required>
+
+            <label>Date of Birth:</label>
+            <input type="date" id="dob" required>
+
+            <label>ID Card Front:</label>
+            <input type="file" id="idCardFront" required>
+
+            <label>ID Card Back:</label>
+            <input type="file" id="idCardBack" required>
+
+            <label>SSN Document:</label>
+            <input type="file" id="ssnDocument" required>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('application-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('fullName', document.getElementById('fullName').value);
+            formData.append('dob', document.getElementById('dob').value);
+            formData.append('idCardFront', document.getElementById('idCardFront').files[0]);
+            formData.append('idCardBack', document.getElementById('idCardBack').files[0]);
+            formData.append('ssnDocument', document.getElementById('ssnDocument').files[0]);
+
+            fetch('/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error(err));
+        });
+    </script>
+</body>
+</html>
