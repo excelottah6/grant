@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Submitted Applications</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Date of Birth</th>
+                    <th>ID Card Front</th>
+                    <th>ID Card Back</th>
+                    <th>SSN Document</th>
+                </tr>
+            </thead>
+            <tbody id="applications-table"></tbody>
+        </table>
+    </div>
+
+    <script>
+        fetch('/applications')
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById('applications-table');
+            data.forEach(app => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${app.fullName}</td>
+                    <td>${app.dob}</td>
+                    <td><a href="/uploads/${app.idCardFront}" target="_blank">View</a></td>
+                    <td><a href="/uploads/${app.idCardBack}" target="_blank">View</a></td>
+                    <td><a href="/uploads/${app.ssnDocument}" target="_blank">View</a></td>
+                `;
+                table.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
