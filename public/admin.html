@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,6 +14,10 @@
                 <tr>
                     <th>Full Name</th>
                     <th>Date of Birth</th>
+                    <th>Home Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>SSN</th>
                     <th>ID Card Front</th>
                     <th>ID Card Back</th>
                     <th>SSN Document</th>
@@ -33,6 +37,10 @@
                 row.innerHTML = `
                     <td>${app.fullName}</td>
                     <td>${app.dob}</td>
+                    <td>${app.homeAddress}</td>
+                    <td>${app.phoneNumber}</td>
+                    <td>${app.email}</td>
+                    <td>${app.ssn}</td>
                     <td><a href="/uploads/${app.idCardFront}" target="_blank">View</a></td>
                     <td><a href="/uploads/${app.idCardBack}" target="_blank">View</a></td>
                     <td><a href="/uploads/${app.ssnDocument}" target="_blank">View</a></td>
