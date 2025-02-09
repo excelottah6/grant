@@ -1,35 +1,32 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+h1 {
     text-align: center;
 }
-.login-container, .admin-container {
-    width: 40%;
-    margin: 50px auto;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+
+form {
+    display: flex;
+    flex-direction: column;
 }
-input, button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-}
-button {
-    background: black;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-.error {
-    color: red;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+
+label {
+    margin-top: 10px;
 }
