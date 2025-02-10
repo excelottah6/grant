@@ -10,32 +10,32 @@
     <div class="container">
         <h1>Grant Application Form</h1>
         <form id="application-form">
-            <label>Full Name:</label>
-            <input type="text" id="fullName" placeholder="Enter your full name" required>
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
 
-            <label>Date of Birth:</label>
-            <input type="date" id="dob" placeholder="Select your date of birth" required>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
 
-            <label>Home Address:</label>
-            <input type="text" id="homeAddress" placeholder="Enter your home address" required>
+            <label for="homeAddress">Home Address:</label>
+            <input type="text" id="homeAddress" name="homeAddress" placeholder="Enter your home address" required>
 
-            <label>Phone Number:</label>
-            <input type="tel" id="phoneNumber" placeholder="Enter your phone number" required>
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required>
 
-            <label>Email:</label>
-            <input type="email" id="email" placeholder="Enter your email address" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
 
-            <label>SSN:</label>
-            <input type="text" id="ssn" placeholder="Enter your SSN" required>
+            <label for="ssn">SSN:</label>
+            <input type="text" id="ssn" name="ssn" placeholder="Enter your SSN" required>
 
-            <label>ID Card Front:</label>
-            <input type="file" id="idCardFront" required>
+            <label for="idCardFront">ID Card Front:</label>
+            <input type="file" id="idCardFront" name="idCardFront" accept="image/*" required>
 
-            <label>ID Card Back:</label>
-            <input type="file" id="idCardBack" required>
+            <label for="idCardBack">ID Card Back:</label>
+            <input type="file" id="idCardBack" name="idCardBack" accept="image/*" required>
 
-            <label>SSN Document:</label>
-            <input type="file" id="ssnDocument" required>
+            <label for="ssnDocument">SSN Document:</label>
+            <input type="file" id="ssnDocument" name="ssnDocument" accept="image/*" required>
 
             <button type="submit">Submit Application</button>
         </form>
@@ -44,25 +44,30 @@
     <script>
         document.getElementById('application-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('fullName', document.getElementById('fullName').value);
-            formData.append('dob', document.getElementById('dob').value);
-            formData.append('homeAddress', document.getElementById('homeAddress').value);
-            formData.append('phoneNumber', document.getElementById('phoneNumber').value);
-            formData.append('email', document.getElementById('email').value);
-            formData.append('ssn', document.getElementById('ssn').value);
-            formData.append('idCardFront', document.getElementById('idCardFront').files[0]);
-            formData.append('idCardBack', document.getElementById('idCardBack').files[0]);
-            formData.append('ssnDocument', document.getElementById('ssnDocument').files[0]);
+
+            const dob = new Date(document.getElementById('dob').value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+
+            if (age < 18 || (age === 18 && today < new Date(dob.getFullYear() + 18, dob.getMonth(), dob.getDate()))) {
+                alert("You must be at least 18 years old to apply.");
+                return;
+            }
+
+            const formData = new FormData(this);
 
             fetch('/submit', {
                 method: 'POST',
                 body: formData
             })
             .then(res => res.json())
-            .then(data => alert(data.message))
-            .catch(err => console.error(err));
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(err => {
+                console.error("Submission Error:", err);
+                alert("Something went wrong. Please try again.");
+            });
         });
     </script>
 </body>
